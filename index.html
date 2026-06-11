@@ -1,36 +1,665 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Embed Example</title>
+    <title>NEET Organic Chemistry Name Reactions</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Playfair Display & Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* Video ko responsive banane ke liye basic styling */
-        .video-container {
-            text-align: center;
-            margin-top: 50px;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAF6F0; /* Soft cream background from user's planner */
         }
-        iframe {
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        .serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E2C7C3;
+            border-radius: 10px;
         }
     </style>
 </head>
-<body>
+<body class="text-[#2D2D2D] min-h-screen pb-12">
 
-    <div class="video-container">
-        <h1>My Favorite YouTube Video</h1>
+    <!-- Header Section -->
+    <header class="max-w-4xl mx-auto pt-8 px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold serif-title text-[#1C1C1C] mb-2">Organic Chemistry</h1>
+        <p class="text-lg text-gray-600 italic">Complete Name Reactions Checklist for NEET & JEE</p>
         
-        <iframe 
-            width="560" 
-            height="315" 
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
+        <!-- Progress Tracker -->
+        <div class="mt-6 bg-white rounded-2xl p-5 shadow-sm border border-[#E6DDD3] max-w-xl mx-auto">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-semibold text-gray-700">Revision Progress</span>
+                <span id="progress-text" class="text-sm font-bold text-[#D0A5A0]">0% (0/31 Reactions)</span>
+            </div>
+            <div class="w-full bg-[#FAF6F0] rounded-full h-3 overflow-hidden">
+                <div id="progress-bar" class="bg-[#D0A5A0] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Controls & Filters -->
+    <main class="max-w-4xl mx-auto px-4 mt-8">
+        
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-[#E6DDD3] mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Search -->
+            <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
+                <input type="text" id="search-input" placeholder="Search reactions (e.g., Aldol, Finkelstein)..." 
+                       class="w-full pl-10 pr-4 py-2 bg-[#FAF6F0] rounded-xl border border-transparent focus:border-[#E2C7C3] focus:outline-none text-sm transition-all">
+            </div>
+            
+            <!-- Active Recall Toggle -->
+            <div class="flex items-center justify-between md:justify-end gap-3 bg-[#FAF6F0] px-4 py-2 rounded-xl">
+                <span class="text-xs font-semibold text-gray-600 flex items-center gap-1.5">
+                    <i class="fa-solid fa-brain text-[#D0A5A0]"></i> Active Recall Mode
+                </span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="recall-toggle" class="sr-only peer">
+                    <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#D0A5A0]"></div>
+                </label>
+            </div>
         </div>
 
+        <!-- Chapter Filter Tabs -->
+        <div class="flex gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar">
+            <button onclick="filterChapter('all')" class="chapter-btn active px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-[#D0A5A0] text-white" data-chapter="all">
+                All Chapters
+            </button>
+            <button onclick="filterChapter('Haloalkanes & Haloarenes')" class="chapter-btn px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-white text-gray-600 hover:bg-[#E2C7C3]/20" data-chapter="Haloalkanes & Haloarenes">
+                Haloalkanes & Haloarenes
+            </button>
+            <button onclick="filterChapter('Alcohols, Phenols & Ethers')" class="chapter-btn px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-white text-gray-600 hover:bg-[#E2C7C3]/20" data-chapter="Alcohols, Phenols & Ethers">
+                Alcohols, Phenols & Ethers
+            </button>
+            <button onclick="filterChapter('Aldehydes, Ketones & Acids')" class="chapter-btn px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-white text-gray-600 hover:bg-[#E2C7C3]/20" data-chapter="Aldehydes, Ketones & Acids">
+                Aldehydes, Ketones & Acids
+            </button>
+            <button onclick="filterChapter('Amines')" class="chapter-btn px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-white text-gray-600 hover:bg-[#E2C7C3]/20" data-chapter="Amines">
+                Amines & Diazonium
+            </button>
+        </div>
+
+        <!-- Reactions List -->
+        <div id="reactions-container" class="space-y-4">
+            <!-- Dynamic Content Loaded via JS -->
+        </div>
+    </main>
+
+    <!-- Footer Info -->
+    <footer class="text-center mt-12 text-xs text-gray-500">
+        <p>© Prepared for Daily Planner | Revise daily for best results.</p>
+    </footer>
+
+    <!-- Name Reactions Database -->
+    <script>
+        const reactionsData = [
+            // Chapter 1: Haloalkanes & Haloarenes
+            {
+                id: 1,
+                name: "Finkelstein Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Alkyl Chloride or Alkyl Bromide (R-Cl / R-Br)",
+                reagents: "Sodium Iodide (NaI) in Dry Acetone",
+                products: "Alkyl Iodide (R-I)",
+                equation: "R-X + NaI \\xrightarrow{\\text{dry acetone}} R-I + NaX \\quad (X = Cl, Br)",
+                description: "Used specifically for preparing alkyl iodides. NaCl or NaBr precipitate out in dry acetone, driving the reaction forward (Le Chatelier's Principle).",
+                ncertTip: "Based on halogen exchange mechanism. Dry acetone is crucial."
+            },
+            {
+                id: 2,
+                name: "Swarts Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Alkyl Chloride or Alkyl Bromide",
+                reagents: "Metallic Fluoride (AgF, Hg₂F₂, CoF₂ or SbF₃)",
+                products: "Alkyl Fluoride (R-F)",
+                equation: "R-X + AgF \\rightarrow R-F + AgX",
+                description: "The best method for the synthesis of alkyl fluorides, which are otherwise difficult to prepare directly.",
+                ncertTip: "Often asked in match the column with Finkelstein reaction."
+            },
+            {
+                id: 3,
+                name: "Wurtz Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Two molecules of Alkyl Halide (2R-X)",
+                reagents: "Sodium Metal (Na) in Dry Ether",
+                products: "Symmetrical Alkane (R-R) with double carbon atoms",
+                equation: "2R-X + 2Na \\xrightarrow{\\text{dry ether}} R-R + 2NaX",
+                description: "Coupling reaction used to prepare symmetrical alkanes containing even number of carbon atoms.",
+                ncertTip: "Methane cannot be prepared by this method. Mixture of alkanes is formed if different alkyl halides are used."
+            },
+            {
+                id: 4,
+                name: "Fittig Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Two molecules of Aryl Halide (2Ar-X)",
+                reagents: "Sodium Metal in Dry Ether",
+                products: "Diphenyl / Biphenyl",
+                equation: "2Ar-X + 2Na \\xrightarrow{\\text{dry ether}} Ar-Ar + 2NaX",
+                description: "Analogous to Wurtz reaction, but specifically links two aryl rings together.",
+                ncertTip: "Perfect for synthesis of diphenyl compounds."
+            },
+            {
+                id: 5,
+                name: "Wurtz-Fittig Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "One Alkyl Halide (R-X) + One Aryl Halide (Ar-X)",
+                reagents: "Sodium Metal in Dry Ether",
+                products: "Alkyl Arene (Ar-R)",
+                equation: "Ar-X + R-X + 2Na \\xrightarrow{\\text{dry ether}} Ar-R + 2NaX",
+                description: "Combines an alkyl group and an aryl group to produce alkylated aromatic hydrocarbons.",
+                ncertTip: "Example: Preparation of Toluene from Chlorobenzene and Methyl Chloride."
+            },
+            {
+                id: 6,
+                name: "Sandmeyer Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Benzene Diazonium Halide (C₆H₅N₂⁺ X⁻)",
+                reagents: "Cuprous Halide dissolved in corresponding halogen acid (Cu₂Cl₂/HCl or Cu₂Br₂/HBr)",
+                products: "Aryl Chloride or Aryl Bromide (Chlorobenzene / Bromobenzene)",
+                equation: "Ar-N_2^+X^- \\xrightarrow{Cu_2X_2} Ar-X + N_2",
+                description: "An elegant nucleophilic substitution reaction to introduce Cl or Br into a benzene ring using diazonium salt.",
+                ncertTip: "For Aryl Iodide, simply warming with KI is enough; cuprous halide is NOT required."
+            },
+            {
+                id: 7,
+                name: "Gattermann Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Benzene Diazonium Halide",
+                reagents: "Copper Powder in corresponding halogen acid (Cu/HCl or Cu/HBr)",
+                products: "Chlorobenzene or Bromobenzene",
+                equation: "Ar-N_2^+X^- \\xrightarrow{Cu / HX} Ar-X + N_2 + CuX",
+                description: "A variation of Sandmeyer reaction where copper powder is used instead of cuprous halide. The yield is slightly lower than Sandmeyer.",
+                ncertTip: "Difference: Sandmeyer uses Cu₂(I) salts; Gattermann uses metallic Cu powder."
+            },
+            {
+                id: 8,
+                name: "Balz-Schiemann Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Benzene Diazonium Halide",
+                reagents: "Fluoroboric Acid (HBF₄) followed by heating",
+                products: "Fluorobenzene",
+                equation: "Ar-N_2^+ Cl^- + HBF_4 \\rightarrow Ar-N_2^+BF_4^- \\xrightarrow{\\Delta} Ar-F + BF_3 + N_2",
+                description: "First prepares an insoluble diazonium fluoroborate precipitate, which on dry heating decomposes to yield fluorobenzene.",
+                ncertTip: "The primary path to introduce Fluorine on a benzene ring directly."
+            },
+            {
+                id: 9,
+                name: "Hunsdiecker Reaction",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Silver salt of Carboxylic Acid (R-COOAg)",
+                reagents: "Bromine (Br₂) in CCl₄ under reflux",
+                products: "Alkyl Bromide (R-Br) with one less carbon atom",
+                equation: "R-COOAg + Br_2 \\xrightarrow{CCl_4 / \\Delta} R-Br + CO_2 + AgBr",
+                description: "A decarboxylative halogenation of silver carboxylates, reducing chain length by one carbon.",
+                ncertTip: "Follows a free radical mechanism."
+            },
+
+            // Chapter 2: Alcohols, Phenols & Ethers
+            {
+                id: 10,
+                name: "Kolbe's Reaction",
+                chapter: "Alcohols, Phenols & Ethers",
+                reactants: "Phenol / Sodium Phenoxide",
+                reagents: "Carbon Dioxide (CO₂) & Sodium Hydroxide (NaOH) at 400K & 4-7 atm, followed by acid hydration",
+                products: "Salicylic Acid (2-Hydroxybenzoic Acid)",
+                equation: "C_6H_5ONa + CO_2 \\xrightarrow[125^\\circ C, 4-7 atm]{} \\xrightarrow{H^+} \\text{Salicylic Acid}",
+                description: "Electrophilic aromatic substitution where the weak electrophile CO₂ attacks highly reactive phenoxide ion.",
+                ncertTip: "Major product is always ortho isomer due to intramolecular hydrogen bonding."
+            },
+            {
+                id: 11,
+                name: "Reimer-Tiemann Reaction",
+                chapter: "Alcohols, Phenols & Ethers",
+                reactants: "Phenol",
+                reagents: "Chloroform (CHCl₃) + aqueous NaOH, followed by acidification",
+                products: "Salicylaldehyde (2-Hydroxybenzaldehyde)",
+                equation: "Phenol \\xrightarrow{CHCl_3 + NaOH} \\text{Intermediate} \\xrightarrow{H^+} \\text{Salicylaldehyde}",
+                description: "Introduction of an aldehyde group (-CHO) at the ortho position of Phenol. The active electrophile here is Dichlorocarbene (:CCl₂).",
+                ncertTip: "If CCl₄ is used instead of CHCl₃, Salicylic acid is formed instead of salicylaldehyde!"
+            },
+            {
+                id: 12,
+                name: "Williamson Synthesis",
+                chapter: "Alcohols, Phenols & Ethers",
+                reactants: "Alkyl Halide (Primary) + Sodium Alkoxide (R'-ONa)",
+                reagents: "SN2 Reaction conditions",
+                products: "Ether (R-O-R')",
+                equation: "R-X + R'-ONa \\rightarrow R-O-R' + NaX",
+                description: "Most common industrial and laboratory method to produce both symmetrical and unsymmetrical ethers.",
+                ncertTip: "Crucial Rule: The Alkyl halide must be primary (1°). If 3° alkyl halide is used, elimination dominates to give alkene!"
+            },
+
+            // Chapter 3: Aldehydes, Ketones & Acids
+            {
+                id: 13,
+                name: "Rosenmund Reduction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Acid Chloride (Acyl Chloride)",
+                reagents: "Hydrogen gas (H₂) over Palladium catalyst supported on Barium Sulphate (Pd-BaSO₄) poisoned with Quinoline or Sulfur",
+                products: "Aldehyde",
+                equation: "R-COCl + H_2 \\xrightarrow{Pd-BaSO_4} R-CHO + HCl",
+                description: "Selective hydrogenation of acyl chloride to aldehyde. BaSO₄ acts as a poison to prevent further reduction of aldehyde to alcohol.",
+                ncertTip: "Formaldehyde (HCHO) cannot be prepared by this method because formyl chloride is highly unstable."
+            },
+            {
+                id: 14,
+                name: "Stephen Reduction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Nitrile (Alkyl Cyanide)",
+                reagents: "Tin(II) chloride (SnCl₂) and hydrochloric acid (HCl), followed by hydrolysis",
+                products: "Aldehyde",
+                equation: "R-CN + SnCl_2 + HCl \\rightarrow R-CH=NH.HCl \\xrightarrow{H_2O} R-CHO",
+                description: "Reduction of nitrile to imine hydrochloride intermediate, which easily hydrolyzes in warm water to give the respective aldehyde.",
+                ncertTip: "A very clean way to change -CN directly into -CHO."
+            },
+            {
+                id: 15,
+                name: "Etard Reaction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Toluene (Methyl Benzene)",
+                reagents: "Chromyl Chloride (CrO₂Cl₂) in CS₂, followed by hydrolysis",
+                products: "Benzaldehyde",
+                equation: "C_6H_5CH_3 + 2CrO_2Cl_2 \\rightarrow \\text{Chromium Complex} \\xrightarrow{H_2O} C_6H_5CHO",
+                description: "Mild oxidising agent chromyl chloride oxidises the methyl group of toluene into a brown chromium complex, which on hydrolysis yields benzaldehyde.",
+                ncertTip: "Prevents further oxidation of benzaldehyde to benzoic acid."
+            },
+            {
+                id: 16,
+                name: "Gattermann-Koch Reaction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Benzene or its derivative",
+                reagents: "Carbon monoxide (CO) and Hydrogen Chloride (HCl) in presence of anhydrous AlCl₃ or CuCl",
+                products: "Benzaldehyde",
+                equation: "C_6H_6 + CO + HCl \\xrightarrow{anhydrous \\, AlCl_3} C_6H_5CHO",
+                description: "Formylation of aromatic ring directly converting benzene to benzaldehyde. Electrophile generated is formyl cation.",
+                ncertTip: "Alternative way to prepare aromatic aldehydes without starting from toluene."
+            },
+            {
+                id: 17,
+                name: "Clemmensen Reduction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Aldehyde or Ketone (Carbonyl Compounds)",
+                reagents: "Zinc Amalgam (Zn-Hg) and concentrated Hydrochloric Acid (HCl)",
+                products: "Alkane (Carbonyl >C=O group reduced to >CH₂)",
+                equation: ">C=O \\xrightarrow{Zn-Hg / HCl} >CH_2 + H_2O",
+                description: "Reduces carbonyl group directly to methylene group under strongly acidic conditions.",
+                ncertTip: "Cannot be used if the molecule contains acid-sensitive groups (like -OH, -NH₂)."
+            },
+            {
+                id: 18,
+                name: "Wolff-Kishner Reduction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Aldehyde or Ketone",
+                reagents: "Hydrazine (NH₂NH₂) followed by heating with KOH in high boiling polar solvent like Ethylene Glycol",
+                products: "Alkane",
+                equation: ">C=O \\xrightarrow{NH_2NH_2} >C=N-NH_2 \\xrightarrow{KOH / Ethylene \\, Glycol} >CH_2 + N_2",
+                description: "Reduces carbonyl compounds to alkanes via hydrazone intermediate under strongly basic conditions.",
+                ncertTip: "Complementary to Clemmensen; perfect for acid-sensitive but base-stable molecules."
+            },
+            {
+                id: 19,
+                name: "Aldol Condensation",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Aldehydes or Ketones containing at least one α-hydrogen",
+                reagents: "Dilute Base (NaOH, Ba(OH)₂ or Na₂CO₃) followed by heat",
+                products: "β-hydroxy aldehyde/ketone (Aldol) which dehydrates to form α,β-unsaturated carbonyl compound",
+                equation: "2CH_3CHO \\xrightarrow{\\text{dil. } NaOH} CH_3-CH(OH)-CH_2-CHO \\xrightarrow{\\Delta} CH_3-CH=CH-CHO",
+                description: "Nucleophilic addition of enolate ion to another carbonyl molecule followed by elimination of water upon heating.",
+                ncertTip: "Requires at least one α-hydrogen to initiate enolization."
+            },
+            {
+                id: 20,
+                name: "Cannizzaro Reaction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Aldehydes with NO α-hydrogen (Formaldehyde, Benzaldehyde)",
+                reagents: "Concentrated Base (50% NaOH or KOH)",
+                products: "One molecule of Alcohol (reduced) and one molecule of Carboxylic Acid salt (oxidized)",
+                equation: "2HCHO + NaOH \\rightarrow CH_3OH + HCOONa",
+                description: "Disproportionation (self redox) reaction of aldehydes lacking α-hydrogen under strongly basic conditions.",
+                ncertTip: "Examples: HCHO, C₆H₅CHO, trimethylacetaldehyde."
+            },
+            {
+                id: 21,
+                name: "Iodoform Reaction (Haloform Test)",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Methyl Ketones (R-CO-CH₃) or Alcohols with CH₃-CH(OH)- group",
+                reagents: "Sodium Hypohalite (NaOI) or Iodine (I₂) in NaOH",
+                products: "Yellow precipitate of Iodoform (CHI₃) + Carboxylic acid salt with one less carbon",
+                equation: "R-CO-CH_3 + 3I_2 + 4NaOH \\rightarrow R-COONa + CHI_3 \\downarrow (yellow) + 3NaI + 3H_2O",
+                description: "A highly diagnostic test for confirming the presence of a methyl ketone/methyl carbinol group.",
+                ncertTip: "Ethanol is the only primary alcohol that gives a positive iodoform test."
+            },
+            {
+                id: 22,
+                name: "HVZ (Hell-Volhard-Zelinsky) Reaction",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Carboxylic acids having an α-hydrogen",
+                reagents: "Red Phosphorus and Halogen (Cl₂ or Br₂), followed by hydrolysis",
+                products: "α-Halo Carboxylic Acid",
+                equation: "R-CH_2-COOH \\xrightarrow[H_2O]{(i) X_2 / Red \\, P} R-CH(X)-COOH",
+                description: "Specifically substitutes halogen at the alpha carbon of aliphatic carboxylic acids.",
+                ncertTip: "Red phosphorus is used in small catalytic amounts."
+            },
+            {
+                id: 23,
+                name: "Kolbe's Electrolysis",
+                chapter: "Aldehydes, Ketones & Acids",
+                reactants: "Sodium or Potassium salt of Carboxylic Acid",
+                reagents: "Electrolysis of aqueous solution",
+                products: "Symmetrical Alkane (at Anode)",
+                equation: "2R-COOK + 2H_2O \\xrightarrow{\\text{Electrolysis}} R-R + 2CO_2 + H_2 + 2KOH",
+                description: "Decarboxylative dimerization producing symmetrical alkanes at the anode.",
+                ncertTip: "CO₂ is released at anode, H₂ gas is evolved at cathode."
+            },
+
+            // Chapter 4: Amines & Diazonium Salts
+            {
+                id: 24,
+                name: "Hoffmann Bromamide Degradation",
+                chapter: "Amines",
+                reactants: "Acid Amide (R-CONH₂)",
+                reagents: "Bromine (Br₂) in aqueous or ethanolic Sodium Hydroxide (NaOH/KOH)",
+                products: "Primary Amine (R-NH₂) with one less carbon atom",
+                equation: "R-CONH_2 + Br_2 + 4NaOH \\rightarrow R-NH_2 + Na_2CO_3 + 2NaBr + 2H_2O",
+                description: "Degradation reaction where the alkyl/aryl group migrates from carbonyl carbon to nitrogen, yielding a primary amine stepped down by one carbon.",
+                ncertTip: "Extremely important for step-down synthesis pathways."
+            },
+            {
+                id: 25,
+                name: "Gabriel Phthalimide Synthesis",
+                chapter: "Amines",
+                reactants: "Phthalimide",
+                reagents: "Ethanolic KOH, Alkyl Halide (R-X), followed by alkaline hydrolysis (NaOH)",
+                products: "Pure Primary Aliphatic Amine (R-NH₂)",
+                equation: "\\text{Phthalimide} \\xrightarrow{KOH} \\text{Potassium Phthalimide} \\xrightarrow{R-X} \\text{N-Alkyl Phthalimide} \\xrightarrow{NaOH} R-NH_2",
+                description: "Preparation of clean primary amines without contamination of secondary/tertiary amines.",
+                ncertTip: "Aromatic primary amines (aniline) CANNOT be prepared this way because aryl halides do not undergo nucleophilic substitution with phthalimide anion."
+            },
+            {
+                id: 26,
+                name: "Carbylamine Reaction (Isocyanide Test)",
+                chapter: "Amines",
+                reactants: "Aliphatic or Aromatic Primary Amines (1° Amines only)",
+                reagents: "Chloroform (CHCl₃) and ethanolic Potassium Hydroxide (KOH) on warming",
+                products: "Isocyanide / Carbylamine (R-NC) with extremely offensive/foul smell",
+                equation: "R-NH_2 + CHCl_3 + 3KOH \\xrightarrow{\\Delta} R-NC + 3KCl + 3H_2O",
+                description: "A highly sensitive test to distinguish primary amines from secondary and tertiary amines.",
+                ncertTip: "Foul odor is due to highly poisonous isocyanides. Secondary and tertiary amines do not show this test."
+            },
+            {
+                id: 27,
+                name: "Diazotisation Reaction",
+                chapter: "Amines",
+                reactants: "Aniline (Aromatic Primary Amine)",
+                reagents: "Sodium Nitrite (NaNO₂) and Hydrochloric Acid (HCl) at ice-cold temperature (0 - 5°C)",
+                products: "Benzene Diazonium Chloride",
+                equation: "C_6H_5NH_2 + NaNO_2 + 2HCl \\xrightarrow{273-278 K} C_6H_5N_2^+Cl^- + NaCl + 2H_2O",
+                description: "Conversion of aniline into diazonium salt. The temperature must be strictly controlled between 0-5°C; otherwise, the salt decomposes to phenol.",
+                ncertTip: "The gateway to almost all aromatic substitution products."
+            },
+            {
+                id: 28,
+                name: "Coupling Reaction (Azo Coupling)",
+                chapter: "Amines",
+                reactants: "Benzene Diazonium Chloride + Phenol or Aniline",
+                reagents: "Mildly basic or acidic aqueous solution at 0-5°C",
+                products: "Azo Dyes (p-Hydroxyazobenzene - Orange dye / p-Aminoazobenzene - Yellow dye)",
+                equation: "Ar-N_2^+Cl^- + C_6H_5OH \\rightarrow p-HO-C_6H_4-N=N-C_6H_5 \\quad (Orange \\, dye)",
+                description: "Electrophilic aromatic substitution where diazonium ion acts as electrophile attacking highly activated rings like phenol or aniline at para position.",
+                ncertTip: "Phenol coupling is done in weakly basic medium; Aniline coupling in weakly acidic medium."
+            },
+            {
+                id: 29,
+                name: "Hofmann's Mustard Oil Reaction",
+                chapter: "Amines",
+                reactants: "Primary Amine (R-NH₂)",
+                reagents: "Carbon Disulfide (CS₂) followed by heating with Mercuric Chloride (HgCl₂)",
+                products: "Alkyl Isothiocyanate (R-N=C=S) with characteristic mustard-oil smell",
+                equation: "R-NH_2 + CS_2 \\rightarrow R-NH-CS-SH \\xrightarrow{HgCl_2} R-N=C=S + HgS + 2HCl",
+                description: "Test for primary amines giving an isomer with pungent mustard smell.",
+                ncertTip: "Used to distinguish primary amines."
+            },
+            {
+                id: 30,
+                name: "Friedel-Crafts Alkylation",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Benzene or activated aromatic ring + Alkyl Halide (R-X)",
+                reagents: "Anhydrous Aluminium Chloride (AlCl₃)",
+                products: "Alkylbenzene",
+                equation: "C_6H_6 + R-Cl \\xrightarrow{anhydrous \\, AlCl_3} C_6H_5-R + HCl",
+                description: "Electrophilic aromatic substitution where AlCl₃ generates carbocation R⁺ which attacks the aromatic ring.",
+                ncertTip: "Subject to carbocation rearrangements. Aniline does not undergo this reaction due to salt formation with Lewis acid catalyst."
+            },
+            {
+                id: 31,
+                name: "Friedel-Crafts Acylation",
+                chapter: "Haloalkanes & Haloarenes",
+                reactants: "Benzene + Acid Chloride (R-COCl) or Anhydride",
+                reagents: "Anhydrous Aluminium Chloride (AlCl₃)",
+                products: "Acylbenzene / Aromatic Ketone",
+                equation: "C_6H_6 + R-COCl \\xrightarrow{anhydrous \\, AlCl_3} C_6H_5-CO-R + HCl",
+                description: "Introduction of acyl group onto the benzene ring via stable acylium ion electrophile. No rearrangement occurs.",
+                ncertTip: "Great way to prepare aromatic ketones like Acetophenone."
+            }
+        ];
+
+        let activeChapter = 'all';
+        let searchQuery = '';
+        let isRecallMode = false;
+        let revisedReactions = JSON.parse(localStorage.getItem('revised_reactions') || '[]');
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            renderReactions();
+            updateProgress();
+            
+            // Search listener
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderReactions();
+            });
+
+            // Active Recall toggle listener
+            document.getElementById('recall-toggle').addEventListener('change', (e) => {
+                isRecallMode = e.target.checked;
+                renderReactions();
+            });
+        });
+
+        // Filter by Chapter
+        function filterChapter(chapter) {
+            activeChapter = chapter;
+            document.querySelectorAll('.chapter-btn').forEach(btn => {
+                if (btn.getAttribute('data-chapter') === chapter) {
+                    btn.classList.add('bg-[#D0A5A0]', 'text-white');
+                    btn.classList.remove('bg-white', 'text-gray-600');
+                } else {
+                    btn.classList.remove('bg-[#D0A5A0]', 'text-white');
+                    btn.classList.add('bg-white', 'text-gray-600');
+                }
+            });
+            renderReactions();
+        }
+
+        // Toggle revised status
+        function toggleRevised(id) {
+            const index = revisedReactions.indexOf(id);
+            if (index > -1) {
+                revisedReactions.splice(index, 1);
+            } else {
+                revisedReactions.push(id);
+            }
+            localStorage.setItem('revised_reactions', JSON.stringify(revisedReactions));
+            updateProgress();
+            
+            // Update individual element style without complete re-render to save transition
+            const card = document.getElementById(`reaction-card-${id}`);
+            const checkbox = document.getElementById(`check-${id}`);
+            if (revisedReactions.includes(id)) {
+                card.classList.add('border-[#C1C8C0]', 'bg-white');
+                checkbox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>`;
+            } else {
+                card.classList.remove('border-[#C1C8C0]');
+                checkbox.innerHTML = `<i class="fa-regular fa-circle text-gray-300 text-xl hover:text-[#D0A5A0]"></i>`;
+            }
+        }
+
+        // Update overall progress bar
+        function updateProgress() {
+            const total = reactionsData.length;
+            const completed = revisedReactions.length;
+            const percent = Math.round((completed / total) * 100);
+            
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `${percent}% (${completed}/${total} Reactions)`;
+        }
+
+        // Toggle details reveal in Active Recall Mode
+        function revealField(elementId) {
+            const el = document.getElementById(elementId);
+            if (el.classList.contains('filter-blur') || el.classList.contains('blur-sm')) {
+                el.classList.remove('blur-sm', 'bg-gray-100', 'cursor-pointer');
+                el.classList.add('bg-transparent');
+            }
+        }
+
+        // Render Reactions to Container
+        function renderReactions() {
+            const container = document.getElementById('reactions-container');
+            container.innerHTML = '';
+
+            const filtered = reactionsData.filter(rx => {
+                const matchesChapter = (activeChapter === 'all' || rx.chapter === activeChapter);
+                const matchesSearch = rx.name.toLowerCase().includes(searchQuery) || 
+                                      rx.description.toLowerCase().includes(searchQuery) ||
+                                      rx.reagents.toLowerCase().includes(searchQuery) ||
+                                      rx.products.toLowerCase().includes(searchQuery);
+                return matchesChapter && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
+                        <i class="fa-regular fa-folder-open text-3xl text-gray-300 mb-2"></i>
+                        <p class="text-sm text-gray-500">No reactions found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach((rx, index) => {
+                const isRevised = revisedReactions.includes(rx.id);
+                const cardBorder = isRevised ? 'border-[#C1C8C0]' : 'border-[#E6DDD3]';
+                
+                // Active Recall Styling
+                const blurClass = isRecallMode ? 'blur-sm bg-gray-100 select-none cursor-pointer transition-all duration-300 rounded px-1' : '';
+                const clickAction = isRecallMode ? 'onclick="revealField(this.id)"' : '';
+
+                // Beautiful structured HTML card
+                const card = document.createElement('div');
+                card.id = `reaction-card-${rx.id}`;
+                card.className = `bg-white p-5 md:p-6 rounded-2xl border ${cardBorder} shadow-sm transition-all hover:shadow-md`;
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-wider font-bold bg-[#FAF6F0] text-gray-500 px-2.5 py-1 rounded-full border border-gray-200">${rx.chapter}</span>
+                            <h3 class="text-xl font-bold text-[#1C1C1C] serif-title mt-2 flex items-center gap-2">
+                                <span class="text-gray-400 font-normal text-sm">#${index + 1}</span>
+                                ${rx.name}
+                            </h3>
+                        </div>
+                        <button onclick="toggleRevised(${rx.id})" id="check-${rx.id}" class="focus:outline-none transition-transform active:scale-95">
+                            ${isRevised ? 
+                                '<i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>' : 
+                                '<i class="fa-regular fa-circle text-gray-300 text-xl hover:text-[#D0A5A0]"></i>'
+                            }
+                        </button>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-sm text-gray-600 mt-2.5 leading-relaxed">${rx.description}</p>
+
+                    <!-- Reactants, Reagents, Products flow -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-4 p-3 bg-[#FAF6F0] rounded-xl border border-[#E6DDD3]/50 text-xs">
+                        <div>
+                            <span class="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Reactant:</span>
+                            <span class="font-medium text-gray-800">${rx.reactants}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Reagent:</span>
+                            <span id="reagent-${rx.id}" ${clickAction} class="font-bold text-[#D0A5A0] block ${blurClass}">${rx.reagents}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Product:</span>
+                            <span id="product-${rx.id}" ${clickAction} class="font-bold text-emerald-700 block ${blurClass}">${rx.products}</span>
+                        </div>
+                    </div>
+
+                    <!-- Clean Chemical Equation Area -->
+                    <div class="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center my-3 overflow-x-auto">
+                        <code class="text-sm font-semibold text-gray-800 font-mono tracking-wide">
+                            ${rx.id === 1 ? 'R-X + NaI ──(dry acetone)──> R-I + NaX' : ''}
+                            ${rx.id === 2 ? 'R-X + AgF ──(metallic fluoride)──> R-F + AgX' : ''}
+                            ${rx.id === 3 ? '2R-X + 2Na ──(dry ether)──> R-R + 2NaX' : ''}
+                            ${rx.id === 4 ? '2Ar-X + 2Na ──(dry ether)──> Ar-Ar (Biphenyl) + 2NaX' : ''}
+                            ${rx.id === 5 ? 'Ar-X + R-X + 2Na ──(dry ether)──> Ar-R + 2NaX' : ''}
+                            ${rx.id === 6 ? 'Ar-N2⁺X⁻ ──(Cu2X2 / HX)──> Ar-X + N2' : ''}
+                            ${rx.id === 7 ? 'Ar-N2⁺X⁻ ──(Cu / HX)──> Ar-X + N2 + CuX' : ''}
+                            ${rx.id === 8 ? 'Ar-N2⁺Cl⁻ + HBF4 ──> Ar-N2⁺BF4⁻ ──(Heat)──> Ar-F + BF3 + N2' : ''}
+                            ${rx.id === 9 ? 'R-COOAg + Br2 ──(CCl4 / reflux)──> R-Br + CO2 + AgBr' : ''}
+                            ${rx.id === 10 ? 'Phenol + NaOH ──> Sodium Phenoxide ──(CO2 / H⁺)──> Salicylic Acid' : ''}
+                            ${rx.id === 11 ? 'Phenol + CHCl3 + aq. NaOH ──> Salicylaldehyde' : ''}
+                            ${rx.id === 12 ? 'R-X (1°) + R\'-ONa ──(SN2)──> R-O-R\' + NaX' : ''}
+                            ${rx.id === 13 ? 'R-COCl + H2 ──(Pd-BaSO4)──> R-CHO + HCl' : ''}
+                            ${rx.id === 14 ? 'R-CN + SnCl2 + HCl ──> R-CH=NH.HCl ──(H2O)──> R-CHO' : ''}
+                            ${rx.id === 15 ? 'C6H5CH3 + 2CrO2Cl2 ──> Complex ──(H2O)──> C6H5CHO' : ''}
+                            ${rx.id === 16 ? 'C6H6 + CO + HCl ──(Anhyd. AlCl3)──> C6H5CHO' : ''}
+                            ${rx.id === 17 ? '>C=O ──(Zn-Hg / conc. HCl)──> >CH2' : ''}
+                            ${rx.id === 18 ? '>C=O ──(NH2NH2 / KOH / glycol)──> >CH2 + N2' : ''}
+                            ${rx.id === 19 ? '2CH3CHO ──(dil. NaOH)──> CH3-CH(OH)-CH2CHO ──(Heat)──> CH3-CH=CH-CHO' : ''}
+                            ${rx.id === 20 ? '2HCHO (no α-H) + conc. NaOH ──> CH3OH + HCOONa' : ''}
+                            ${rx.id === 21 ? 'R-CO-CH3 + 3I2 + 4NaOH ──> R-COONa + CHI3 (Yellow) + 3NaI' : ''}
+                            ${rx.id === 22 ? 'R-CH2-COOH ──(i. Red P / X2, ii. H2O)──> R-CH(X)-COOH' : ''}
+                            ${rx.id === 23 ? '2R-COOK + 2H2O ──(Electrolysis)──> R-R (at anode) + 2CO2 + H2' : ''}
+                            ${rx.id === 24 ? 'R-CONH2 + Br2 + 4NaOH ──> R-NH2 + Na2CO3 + 2NaBr' : ''}
+                            ${rx.id === 25 ? 'Phthalimide ──(i. KOH, ii. R-X, iii. NaOH)──> Primary Amine (R-NH2)' : ''}
+                            ${rx.id === 26 ? 'R-NH2 (1°) + CHCl3 + 3KOH ──(Heat)──> R-NC (Foul smell) + 3KCl' : ''}
+                            ${rx.id === 27 ? 'C6H5NH2 + NaNO2 + 2HCl ──(0-5°C)──> C6H5N2⁺Cl⁻ + NaCl + 2H2O' : ''}
+                            ${rx.id === 28 ? 'Benzene Diazonium Chloride + Phenol ──(pH 9-10)──> p-Hydroxyazobenzene (Orange dye)' : ''}
+                            ${rx.id === 29 ? 'R-NH2 + CS2 + HgCl2 ──(Heat)──> R-N=C=S (Mustard oil smell) + HgS' : ''}
+                            ${rx.id === 30 ? 'C6H6 + R-Cl ──(Anhyd. AlCl3)──> C6H5-R + HCl' : ''}
+                            ${rx.id === 31 ? 'C6H6 + R-COCl ──(Anhyd. AlCl3)──> C6H5-CO-R + HCl' : ''}
+                        </code>
+                    </div>
+
+                    <!-- NCERT / Exam Tip -->
+                    <div class="mt-3 text-xs bg-amber-50 border border-amber-100 rounded-lg p-2.5 flex items-start gap-2 text-amber-800">
+                        <i class="fa-regular fa-lightbulb mt-0.5 text-amber-500"></i>
+                        <span><strong>NCERT Key point:</strong> ${rx.ncertTip}</span>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+    </script>
 </body>
 </html>
+
+```
